@@ -64,95 +64,155 @@ curl http://192.169.243.65:8080/api/sign-up/store-types
 ]
 ```
 
-#### Signing up First step
-Sending email and phone number. After this useer mast check his email box.
+### Signing Up Merchant
 
 ```endpoint
-POST /api/sign-up
+POST /api/sign-up/merchant
 ```
 
 #### Example request
 
 ```curl
-curl -X POST http://192.169.243.65:8080/api/sign-up
+curl -X POST http://192.169.243.65:8080/api/sign-up/merchant
 ```
 
 #### Example request body
 
 ```json
 {
-	"email_id": "vagi@travala10.com",
-	"phone_number": "8927931723"
+"email_id":"a@gmail.com",
+"mobile": {
+		"dialing_code": 91,
+		"number": "458697584"
+	}
 }
 ```
 
 Property | Description
 ---|---
 `email_id` | (required) email address
-`phone_number` | (required) phone number
+`mobile.dialing_code` | (required) phone number dialing_code
+`mobile.number` | (required) phone number
 
 #### Example response
 
 ```json
 {
     "code": 200,
-    "message": "Email Verification Code is sended to the customer email"
+    "user_id": "5b65eba67ae87956eade18a7"
 }
 ```
 
-#### Signing up Finish step
-Finishing the signing up
+### Signing Up Merchant Validation
+Finishing the merchant signing up
 
 ```endpoint
-POST /api/sign-up/finish
+POST /api/sign-up/merchant/verify
 ```
 
 #### Example request
 
 ```curl
-curl -X POST http://192.169.243.65:8080/api/sign-up/finish
+curl -X POST http://192.169.243.65:8080/api/sign-up/merchant/verify
 ```
 
 #### Example request body
 
 ```json
-{
-	"password":"password",
-"email_verification_code":"ac2f6694777a770e786cd49195f90275692ee65a1d2695a21ec69a05a09f493aa9896c0d67f3a7ead875c62a959acd764621d99ca4d3b0a345672651e055dfe09271955759e1149bf5a7fcb48b4a0aaa97c1280cc259fe821eaf8f818986262a",
-"sms_verification_code":"sms_verification_code",
-"private_shop_request":"private_shop_request",
-"other_location":"other_location",
-"other_location_delivery_by":"other_location_delivery_by",
-"delivery_by":"delivery_by",
-"dilivery_time_from":"dilivery_time_from",
-"delivery_time_to":"delivery_time_to",
-"delivery_distance":"delivery_distance",
-"refaund_within":"refaund_within",
-"product_replacement_within":"product_replacement_within",
-"pincode":"pincode",
-"state":"state",
-"city":"city",
-"country":"country",
-"address":"address",
-"mobile_number":"mobile_number",
-"secondary_mobile_number":"secondary_mobile_number",
-"store_name":"store_name",
-"store_category":"store_category",
-"store_type":"store_type"
-}
+    "user_id":"5b65e5e3873aff52a1a92f16",
+	"email_code":398980,
+	"mobile_code":210065,
+	"password": "111111111"
 ```
 
 Property | Description
 ---|---
+`user_id` | (required) merchant id
+`email_code` | (required) verificaion code from email
+`mobile_code` | (required) verification code from sms (not implemented) 
 `password` | (required) password
-`email_verification_code` | (required) verificaion code from email
-`sms_verification_code` | (optional) verification code from sms (not implemented) 
 
 #### Example response
 
 ```json
 {
     "code": 200,
-    "message": "Sign-up successfully "
+    "status": true
+}
+```
+
+### Signing Merchant Validation
+Finishing the merchant signing up
+
+```endpoint
+POST /api/sign-up/merchant/verify
+```
+
+#### Example request
+
+```curl
+curl -X POST http://192.169.243.65:8080/api/sign-up/merchant/verify
+```
+
+#### Example request body
+
+```json
+    "user_id":"5b65e5e3873aff52a1a92f16",
+	"email_code":398980,
+	"mobile_code":210065,
+	"password": "111111111"
+```
+
+Property | Description
+---|---
+`user_id` | (required) merchant id
+`email_code` | (required) verificaion code from email
+`mobile_code` | (required) verification code from sms (not implemented) 
+`password` | (required) password
+
+#### Example response
+
+```json
+{
+    "code": 200,
+    "status": true
+}
+```
+
+### Signing Up Store
+
+```endpoint
+POST /api/sign-up/store
+```
+
+#### Example request
+
+```curl
+curl -X POST http://192.169.243.65:8080/api/sign-up/store
+```
+
+#### Example request body
+
+```multipart/form-data
+    json:{"merchant_id": "5b65e5e3873aff52a1a92f16", "store_type": 1, "category_id": "5b63001a21fc9f1314219f29", "display_name": "Sai Super Market", "store_name": "sai_super_market", "mobile": [{"dialing_code": 91, "number": "458697584", "code": 784589, "is_primary": true }, {"dialing_code": 91, "number": "4859658745", "code": 748596, "is_primary": false }], "location": {"type": "point", "coordinates": [11.2563, 114.523], "address": "JVL Plaza, Teynampet", "city": "Chennai", "state": "Tamil Nadu", "zipcode": "600018", "country": "INDIA"}, "refund": {"is_accepted": true, "days": 15 }, "replacement": {"is_accepted": true, "days": 10 }, "delivery": {"radius": 10, "type": 1, "from": "10:00:00", "to": "21:00:00", "other_locations": {"is_enabled": true, "countries": ["AUS", "ENG"], "type": 1 } }, "private": {"is_enabled": true, "settings": "Will be added in the future"} }
+    image_1: file
+    image_2: file
+    image_3: file
+    image_4: file
+    image_5: file
+```
+
+Property | Description
+---|---
+`json` | (required) store json string
+`image_n` | (required) store images
+
+
+#### Example response
+
+```json
+{
+    "code": 200,
+    "status": true
 }
 ```
